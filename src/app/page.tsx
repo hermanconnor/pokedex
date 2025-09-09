@@ -1,3 +1,5 @@
+import PokemonList from "@/components/pokemon-list";
+
 export default function Home() {
   return (
     <div className="container mx-auto px-6 py-8">
@@ -7,6 +9,8 @@ export default function Home() {
           Discover and explore the world of Pokémon
         </p>
       </div>
+
+      <PokemonList />
     </div>
   );
 }
