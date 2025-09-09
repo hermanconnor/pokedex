@@ -1,12 +1,14 @@
-import { getDetailedPokemon } from "@/lib/data";
+"use client";
+
+import usePokemon from "@/hooks/usePokemon";
 import PokemonCard from "./pokemon-card";
 
-const PokemonList = async () => {
-  const detailedPokemon = await getDetailedPokemon();
+const PokemonList = () => {
+  const { allPokemon, isLoading, error } = usePokemon();
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {detailedPokemon.map((pokemon) => (
+      {allPokemon.map((pokemon) => (
         <PokemonCard key={pokemon.id} pokemon={pokemon} />
       ))}
     </div>
