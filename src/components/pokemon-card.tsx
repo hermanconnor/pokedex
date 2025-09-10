@@ -79,8 +79,8 @@ const PokemonCard = ({ pokemon }: Props) => {
           )}
 
           <Link
-            href="/"
-            className="mt-4 block w-full rounded-md bg-teal-500 p-2 text-center transition-all duration-200 hover:bg-teal-400"
+            href={`/pokemon/${pokemon.id}`}
+            className="mt-4 block w-full rounded-md bg-teal-500 p-2 text-center text-white transition-all duration-200 hover:bg-teal-400"
           >
             <span className="flex items-center justify-center">
               <Info className="mr-2 size-4" />

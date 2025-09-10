@@ -34,6 +34,24 @@ export interface Pokemon {
   types: PokemonType[];
 }
 
+export interface PokemonSpecies {
+  flavor_text_entries: Array<{
+    flavor_text: string;
+    language: {
+      name: string;
+    };
+  }>;
+  evolution_chain: {
+    url: string;
+  };
+  genera: Array<{
+    genus: string;
+    language: {
+      name: string;
+    };
+  }>;
+}
+
 export interface PokemonAbility {
   is_hidden: boolean;
   slot: number;

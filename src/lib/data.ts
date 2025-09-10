@@ -1,4 +1,4 @@
-import { NamedAPIResourceList, Pokemon } from "@/types";
+import { NamedAPIResourceList, Pokemon, PokemonSpecies } from "@/types";
 
 export const getPokemonList = async (limit = 500): Promise<Pokemon[]> => {
   const response = await fetch(
@@ -19,4 +19,22 @@ export const getPokemonList = async (limit = 500): Promise<Pokemon[]> => {
   );
 
   return detailedPokemon;
+};
+
+export const getPokemonDetails = async (
+  nameOrId: string | number,
+): Promise<Pokemon> => {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${nameOrId}`);
+  if (!response.ok) throw new Error("Pokemon not found");
+
+  return response.json();
+};
+
+export const getPokemonSpecies = async (
+  speciesUrl: string,
+): Promise<PokemonSpecies> => {
+  const response = await fetch(speciesUrl);
+  if (!response.ok) throw new Error("Species not found");
+
+  return response.json();
 };
