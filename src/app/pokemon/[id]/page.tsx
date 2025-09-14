@@ -1,12 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Heart, Ruler, Weight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import { getPokemonDetails, getPokemonSpecies } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { getPokemonDetails, getPokemonSpecies } from "@/lib/data";
 import typeColors from "@/utils/type-colors";
+import PokemonTabsContent from "@/components/pokemon-tabs-content";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -132,6 +133,9 @@ export default async function PokemonDetailsPage({ params }: Props) {
           </div>
 
           {/* Right Column */}
+          <div className="space-y-6">
+            <PokemonTabsContent pokemon={pokemon} species={species} />
+          </div>
         </div>
       </div>
     </div>
