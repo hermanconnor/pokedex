@@ -1,6 +1,12 @@
+"use client";
+
+import { useState } from "react";
 import PokemonList from "@/components/pokemon-list";
 
 export default function Home() {
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+
   return (
     <div className="container mx-auto px-6 py-8">
       <div className="mb-8 text-center">
@@ -10,7 +16,11 @@ export default function Home() {
         </p>
       </div>
 
-      <PokemonList />
+      <PokemonList
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }
