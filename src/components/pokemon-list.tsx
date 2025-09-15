@@ -3,14 +3,27 @@
 import usePokemon from "@/hooks/usePokemon";
 import PokemonCard from "@/components/pokemon-card";
 import Pagination from "@/components/pagination";
+import {
+  Select,
+  SelectItem,
+  SelectValue,
+  SelectContent,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 interface Props {
   itemsPerPage: number;
+  setItemsPerPage: (items: number) => void;
   currentPage: number;
   setCurrentPage: (page: number) => void;
 }
 
-const PokemonList = ({ itemsPerPage, currentPage, setCurrentPage }: Props) => {
+const PokemonList = ({
+  itemsPerPage,
+  setItemsPerPage,
+  currentPage,
+  setCurrentPage,
+}: Props) => {
   const { data: allPokemon = [], isLoading, error } = usePokemon();
 
   const totalPages = Math.ceil(allPokemon.length / itemsPerPage);
@@ -42,8 +55,24 @@ const PokemonList = ({ itemsPerPage, currentPage, setCurrentPage }: Props) => {
           Showing {startIndex + 1}-{Math.min(endIndex, allPokemon.length)} of{" "}
           {allPokemon.length} Pokémon
         </div>
-        {/* TODO: ADD SELECT */}
-        <div></div>
+
+        <div className="flex items-center gap-2">
+          <span className="text-muted-foreground text-sm">Items per page:</span>
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={(value) => setItemsPerPage(Number(value))}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="20">20</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {paginatedPokemon.map((pokemon) => (

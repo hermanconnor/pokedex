@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { ModeToggle } from "./mode-toggle";
-import SearchBar from "./search-bar";
 
 const Header = () => {
   return (
@@ -22,9 +21,6 @@ const Header = () => {
               <span className="text-foreground text-xl font-bold">Pokédex</span>
             </div>
           </div>
-
-          {/* SEARCH BAR */}
-          <SearchBar />
 
           {/* DARKMODE TOGGLE */}
           <ModeToggle />
