@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import ReactQueryProvider from "@/providers/react-query-provider";
+import { FavoritesProvider } from "@/providers/favorites-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,8 +39,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <Header />
-            <main className="bg-background min-h-dvh">{children}</main>
+            <FavoritesProvider>
+              <Header />
+              <main className="bg-background min-h-dvh lg:px-2">
+                {children}
+              </main>
+            </FavoritesProvider>
           </ThemeProvider>
         </ReactQueryProvider>
       </body>

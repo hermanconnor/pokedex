@@ -21,9 +21,9 @@ import {
 import SearchBar from "@/components/search-bar";
 import sortOptions from "@/utils/sort-options";
 import { cn } from "@/lib/utils";
-
 import { SortOption } from "@/types";
 import pokemonTypes from "@/utils/pokemon-types";
+import { useFavorites } from "@/providers/favorites-provider";
 
 interface Props {
   selectedTypes: string[];
@@ -48,7 +48,7 @@ const PokemonFilters = ({
   itemsPerPage,
   setItemsPerPage,
 }: Props) => {
-  const favoritesCount = 0;
+  const { favoritesCount } = useFavorites();
 
   return (
     <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
@@ -115,7 +115,7 @@ const PokemonFilters = ({
               size="sm"
               className="bg-card/50 hover:bg-card/80 border-border/50 cursor-pointer"
             >
-              <Filter className="mr-2 size-4" />
+              <Filter className="size-4 sm:mr-2" />
               <span className="hidden sm:inline">Filter</span>
               {selectedTypes.length > 0 && (
                 <Badge
@@ -151,7 +151,7 @@ const PokemonFilters = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full justify-start"
+                  className="w-full cursor-pointer justify-start"
                   onClick={onClearFilters}
                 >
                   Clear All Filters

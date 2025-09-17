@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import usePokemon from "@/hooks/usePokemon";
 import PokemonCard from "@/components/pokemon-card";
 import Pagination from "@/components/pagination";
@@ -17,7 +18,7 @@ interface Props {
 }
 
 const PokemonList = ({ itemsPerPage, currentPage, setCurrentPage }: Props) => {
-  const { data: allPokemon = [], isLoading, error } = usePokemon();
+  const { data: allPokemon = [] } = usePokemon();
 
   const totalPages = Math.ceil(allPokemon.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -40,6 +41,8 @@ const PokemonList = ({ itemsPerPage, currentPage, setCurrentPage }: Props) => {
       goToPage(currentPage + 1);
     }
   };
+
+  
 
   return (
     <section className="space-y-6">
