@@ -1,5 +1,6 @@
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   searchQuery: string;
@@ -17,6 +18,16 @@ const SearchBar = ({ searchQuery, onSearchChange }: Props) => {
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
         />
+        {searchQuery && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hover:bg-muted/50 absolute top-1/2 right-1 size-6 -translate-y-1/2 transform p-0"
+            onClick={() => onSearchChange("")}
+          >
+            <X className="size-3" />
+          </Button>
+        )}
       </div>
     </div>
   );

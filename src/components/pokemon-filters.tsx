@@ -57,7 +57,7 @@ const PokemonFilters = ({
   return (
     <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
       {/* SEARCH */}
-      <SearchBar searchQuery={searchQuery} />
+      <SearchBar searchQuery={searchQuery} onSearchChange={onSearchChange} />
       {/* ACTIONS */}
       <div className="flex items-center gap-3">
         <Button
