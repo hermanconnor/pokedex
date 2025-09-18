@@ -6,6 +6,7 @@ import PokemonCard from "@/components/pokemon-card";
 import Pagination from "@/components/pagination";
 import { SortOption } from "@/types";
 import { useFavorites } from "@/providers/favorites-provider";
+import LoadingSkeleton from "./loading-skeleton";
 
 interface Props {
   itemsPerPage: number;
@@ -26,7 +27,7 @@ const PokemonList = ({
   searchQuery,
   sortBy,
 }: Props) => {
-  const { data: allPokemon = [] } = usePokemon();
+  const { data: allPokemon = [], isLoading } = usePokemon();
   const { favorites } = useFavorites();
 
   const goToPage = (page: number) => {
@@ -98,6 +99,8 @@ const PokemonList = ({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedPokemon = sortedAndFilteredPokemon.slice(startIndex, endIndex);
+
+  if (isLoading) return <LoadingSkeleton />;
 
   return (
     <section className="space-y-6">
