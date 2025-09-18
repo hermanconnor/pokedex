@@ -11,6 +11,7 @@ export default function Home() {
   const [sortBy, setSortBy] = useState<SortOption>("id-asc");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState<boolean>(false);
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const handleTypeToggle = (type: string) => {};
 
@@ -28,6 +29,8 @@ export default function Home() {
       </div>
 
       <PokemonFilters
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
         selectedTypes={selectedTypes}
         onTypeToggle={handleTypeToggle}
         onClearFilters={handleClearFilters}
@@ -41,13 +44,12 @@ export default function Home() {
 
       <PokemonList
         itemsPerPage={itemsPerPage}
-        setItemsPerPage={setItemsPerPage}
+        selectedTypes={selectedTypes}
+        searchQuery={searchQuery}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         sortBy={sortBy}
-        onSortChange={setSortBy}
         showFavoritesOnly={showFavoritesOnly}
-        onToggleFavoritesOnly={handleToggleFavoritesOnly}
       />
     </div>
   );

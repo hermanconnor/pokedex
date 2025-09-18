@@ -26,6 +26,8 @@ import pokemonTypes from "@/utils/pokemon-types";
 import { useFavorites } from "@/providers/favorites-provider";
 
 interface Props {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
   selectedTypes: string[];
   onTypeToggle: (type: string) => void;
   onClearFilters: () => void;
@@ -38,6 +40,8 @@ interface Props {
 }
 
 const PokemonFilters = ({
+  searchQuery,
+  onSearchChange,
   selectedTypes,
   onTypeToggle,
   onClearFilters,
@@ -53,7 +57,7 @@ const PokemonFilters = ({
   return (
     <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
       {/* SEARCH */}
-      <SearchBar />
+      <SearchBar searchQuery={searchQuery} />
       {/* ACTIONS */}
       <div className="flex items-center gap-3">
         <Button

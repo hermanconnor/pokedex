@@ -1,7 +1,12 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-const SearchBar = () => {
+interface Props {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+}
+
+const SearchBar = ({ searchQuery, onSearchChange }: Props) => {
   return (
     <div className="w-full max-w-md min-w-0">
       <div className="relative">
@@ -9,6 +14,8 @@ const SearchBar = () => {
         <Input
           placeholder="Search Pokemon..."
           className="bg-card/50 border-border/50 focus:bg-card/80 pl-10 transition-all"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
         />
       </div>
     </div>
