@@ -13,11 +13,21 @@ export default function Home() {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const handleTypeToggle = (type: string) => {};
+  const handleTypeToggle = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
+    );
+  };
 
-  const handleClearFilters = () => {};
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setSelectedTypes([]);
+    setShowFavoritesOnly(false);
+  };
 
-  const handleToggleFavoritesOnly = () => {};
+  const handleToggleFavoritesOnly = () => {
+    setShowFavoritesOnly((prev) => !prev);
+  };
 
   return (
     <div className="container mx-auto px-6 py-8">

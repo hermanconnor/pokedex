@@ -1,13 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Heart, Ruler, Weight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowLeft, Ruler, Weight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getPokemonDetails, getPokemonSpecies } from "@/lib/data";
 import typeColors from "@/utils/type-colors";
 import PokemonTabsContent from "@/components/pokemon-tabs-content";
+import FavoriteButton from "./favorite-button";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -40,14 +40,7 @@ export default async function PokemonDetailsPage({ params }: Props) {
           </Link>
 
           <div className="ml-auto">
-            <Button
-              variant="outline"
-              size="sm"
-              className="glass-effect hover:bg-background/90 cursor-pointer"
-            >
-              <Heart className={cn("mr-2 size-4")} />
-              Add to Favorites
-            </Button>
+            <FavoriteButton pokemon={pokemon} />
           </div>
         </div>
 

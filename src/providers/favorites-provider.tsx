@@ -10,7 +10,7 @@ import React, {
 
 interface FavoritesContextType {
   favorites: Set<number>;
-  toggleFavorites: (pokemonId: number) => void;
+  toggleFavorite: (pokemonId: number) => void;
   isFavorite: (pokemonId: number) => boolean;
   favoritesCount: number;
 }
@@ -44,7 +44,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     );
   }, [favorites]);
 
-  const toggleFavorites = (pokemonId: number): void => {
+  const toggleFavorite = (pokemonId: number): void => {
     setFavorites((prev) => {
       const newFavorites = new Set(prev);
 
@@ -64,7 +64,7 @@ export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
     <FavoritesContext.Provider
       value={{
         favorites,
-        toggleFavorites,
+        toggleFavorite,
         isFavorite,
         favoritesCount: favorites.size,
       }}

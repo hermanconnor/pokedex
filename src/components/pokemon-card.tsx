@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,12 +9,15 @@ import { Pokemon } from "@/types";
 import { cn } from "@/lib/utils";
 import typeColors from "@/utils/type-colors";
 import { Heart, Info } from "lucide-react";
+import { useFavorites } from "@/providers/favorites-provider";
 
 interface Props {
   pokemon: Pokemon;
 }
 
 const PokemonCard = ({ pokemon }: Props) => {
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   const imageUrl =
     pokemon.sprites.other?.["official-artwork"].front_default ||
     pokemon.sprites.front_default ||
@@ -28,8 +33,16 @@ const PokemonCard = ({ pokemon }: Props) => {
           variant="ghost"
           size="sm"
           className="glass-effect hover:bg-background/90 absolute top-5 right-5 cursor-pointer transition-all duration-200"
+          onClick={() => toggleFavorite(pokemon.id)}
         >
-          <Heart className={cn("size-4 transition-all duration-200")} />
+          <Heart
+            className={cn(
+              "size-4 transition-all duration-200",
+              isFavorite(pokemon.id)
+                ? "animate-bounce-subtle fill-red-500 text-red-500"
+                : "text-muted-foreground hover:text-red-400",
+            )}
+          />
         </Button>
 
         <div className="space-y-3">
