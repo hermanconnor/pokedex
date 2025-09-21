@@ -7,6 +7,7 @@ import Pagination from "@/components/pagination";
 import { SortOption } from "@/types";
 import { useFavorites } from "@/providers/favorites-provider";
 import LoadingSkeleton from "./loading-skeleton";
+import NoPokemonFound from "./no-pokemon-found";
 
 interface Props {
   itemsPerPage: number;
@@ -27,7 +28,7 @@ const PokemonList = ({
   searchQuery,
   sortBy,
 }: Props) => {
-  const { data: allPokemon = [], isLoading } = usePokemon();
+  const { data: allPokemon = [], isLoading, isError } = usePokemon();
   const { favorites } = useFavorites();
 
   const goToPage = (page: number) => {
@@ -101,6 +102,25 @@ const PokemonList = ({
   const paginatedPokemon = sortedAndFilteredPokemon.slice(startIndex, endIndex);
 
   if (isLoading) return <LoadingSkeleton />;
+
+  if (isError) {
+    return (
+      <div className="py-12 text-center">
+        <div className="text-destructive mb-4">
+          <div className="mb-4 text-6xl">⚠️</div>
+          <h3 className="mb-2 text-xl font-semibold">Failed to load Pokémon</h3>
+          <p>Please check your internet connection and try again.</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (
+    sortedAndFilteredPokemon.length === 0 &&
+    (searchQuery || selectedTypes.length > 0 || showFavoritesOnly)
+  ) {
+    return <NoPokemonFound showFavoritesOnly={showFavoritesOnly} />;
+  }
 
   return (
     <section className="space-y-6">
