@@ -1,4 +1,4 @@
-import { ArrowUpDown, Filter, Heart } from "lucide-react";
+import { ArrowUpDown, Filter, Heart, Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -53,137 +53,209 @@ const PokemonFilters = ({
   setItemsPerPage,
 }: Props) => {
   const { favoritesCount } = useFavorites();
+  const hasActiveFilters =
+    selectedTypes.length > 0 || searchQuery.length > 0 || showFavoritesOnly;
 
   return (
-    <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
-      {/* SEARCH */}
-      <SearchBar searchQuery={searchQuery} onSearchChange={onSearchChange} />
-      {/* ACTIONS */}
-      <div className="flex items-center gap-3">
-        <Button
-          variant={showFavoritesOnly ? "default" : "outline"}
-          size="sm"
-          onClick={onToggleFavoritesOnly}
-          className={cn(
-            "flex cursor-pointer items-center justify-center text-center transition-all duration-200",
-            showFavoritesOnly
-              ? "bg-primary hover:bg-primary/90 shadow-lg"
-              : "bg-card/50 hover:bg-card/80 border-border/50",
-          )}
-        >
-          <Heart
-            className={`size-4 transition-all duration-200 sm:mr-2 ${showFavoritesOnly ? "animate-bounce-subtle fill-current" : ""}`}
-          />
-          <span className="hidden sm:inline">Favorites</span>
-          {favoritesCount > 0 && (
-            <Badge
-              variant={showFavoritesOnly ? "secondary" : "default"}
-              className="ml-2 h-5 min-w-5 text-xs"
-            >
-              {favoritesCount}
-            </Badge>
-          )}
-        </Button>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-card/50 hover:bg-card/80 border-border/50 cursor-pointer"
-            >
-              <ArrowUpDown className="size-4 sm:mr-2" />
-              <span className="hidden sm:inline">Sort</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="glass-effect w-48" align="end">
-            <DropdownMenuLabel>Sort by</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={sortBy}
-              onValueChange={(value) => onSortChange(value as SortOption)}
-            >
-              {sortOptions.map((option) => (
-                <DropdownMenuRadioItem key={option.value} value={option.value}>
-                  {option.label}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className="bg-card/50 hover:bg-card/80 border-border/50 cursor-pointer"
-            >
-              <Filter className="size-4 sm:mr-2" />
-              <span className="hidden sm:inline">Filter</span>
-              {selectedTypes.length > 0 && (
-                <Badge
-                  variant="secondary"
-                  className="animate-bounce-subtle ml-2 h-5 min-w-5 text-xs"
-                >
-                  {selectedTypes.length}
-                </Badge>
-              )}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="glass-effect max-h-80 w-56 overflow-y-auto"
-            align="end"
-          >
-            <DropdownMenuLabel>Filter by Type</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <div className="grid grid-cols-2 gap-1 p-2">
-              {pokemonTypes.map((type) => (
-                <DropdownMenuCheckboxItem
-                  key={type}
-                  checked={selectedTypes.includes(type)}
-                  onCheckedChange={() => onTypeToggle(type)}
-                  className="text-sm capitalize"
-                >
-                  {type}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </div>
-            {selectedTypes.length > 0 && (
-              <>
-                <DropdownMenuSeparator />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full cursor-pointer justify-start"
-                  onClick={onClearFilters}
-                >
-                  Clear All Filters
-                </Button>
-              </>
+    <>
+      <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
+        {/* SEARCH */}
+        <SearchBar searchQuery={searchQuery} onSearchChange={onSearchChange} />
+        {/* ACTIONS */}
+        <div className="flex items-center gap-3">
+          <Button
+            variant={showFavoritesOnly ? "default" : "outline"}
+            size="sm"
+            onClick={onToggleFavoritesOnly}
+            className={cn(
+              "flex cursor-pointer items-center justify-center text-center transition-all duration-200",
+              showFavoritesOnly
+                ? "bg-primary hover:bg-primary/90 shadow-lg"
+                : "bg-card/50 hover:bg-card/80 border-border/50",
             )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        <div className="flex items-center gap-2">
-          <span className="text-muted-foreground text-sm">Items per page:</span>
-          <Select
-            value={itemsPerPage.toString()}
-            onValueChange={(value) => setItemsPerPage(Number(value))}
           >
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="20">20</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
-          </Select>
+            <Heart
+              className={`size-4 transition-all duration-200 sm:mr-2 ${showFavoritesOnly ? "animate-bounce-subtle fill-current" : ""}`}
+            />
+            <span className="hidden sm:inline">Favorites</span>
+            {favoritesCount > 0 && (
+              <Badge
+                variant={showFavoritesOnly ? "secondary" : "default"}
+                className="ml-2 h-5 min-w-5 text-xs"
+              >
+                {favoritesCount}
+              </Badge>
+            )}
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-card/50 hover:bg-card/80 border-border/50 cursor-pointer"
+              >
+                <ArrowUpDown className="size-4 sm:mr-2" />
+                <span className="hidden sm:inline">Sort</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="glass-effect w-48" align="end">
+              <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuRadioGroup
+                value={sortBy}
+                onValueChange={(value) => onSortChange(value as SortOption)}
+              >
+                {sortOptions.map((option) => (
+                  <DropdownMenuRadioItem
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-card/50 hover:bg-card/80 border-border/50 cursor-pointer"
+              >
+                <Filter className="size-4 sm:mr-2" />
+                <span className="hidden sm:inline">Filter</span>
+                {selectedTypes.length > 0 && (
+                  <Badge
+                    variant="secondary"
+                    className="animate-bounce-subtle ml-2 h-5 min-w-5 text-xs"
+                  >
+                    {selectedTypes.length}
+                  </Badge>
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              className="glass-effect max-h-80 w-56 overflow-y-auto"
+              align="end"
+            >
+              <DropdownMenuLabel>Filter by Type</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <div className="grid grid-cols-2 gap-1 p-2">
+                {pokemonTypes.map((type) => (
+                  <DropdownMenuCheckboxItem
+                    key={type}
+                    checked={selectedTypes.includes(type)}
+                    onCheckedChange={() => onTypeToggle(type)}
+                    className="text-sm capitalize"
+                  >
+                    {type}
+                  </DropdownMenuCheckboxItem>
+                ))}
+              </div>
+              {selectedTypes.length > 0 && (
+                <>
+                  <DropdownMenuSeparator />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full cursor-pointer justify-start"
+                    onClick={onClearFilters}
+                  >
+                    Clear All Filters
+                  </Button>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <div className="flex items-center gap-2">
+            <span className="text-muted-foreground text-sm">
+              Items per page:
+            </span>
+            <Select
+              value={itemsPerPage.toString()}
+              onValueChange={(value) => setItemsPerPage(Number(value))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="20">20</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
-    </div>
+      {/* ACTIVE FILTERS */}
+      {hasActiveFilters && (
+        <div className="animate-slide-up my-4 flex flex-wrap items-center gap-2">
+          <span className="text-muted-foreground text-sm font-medium">
+            Active Filters:
+          </span>
+          {searchQuery && (
+            <Badge variant="outline" className="bg-card/50 gap-1">
+              <Search className="size-3" />
+              &quot;{searchQuery}&quot;
+              <Button
+                variant="ghost"
+                size="sm"
+                className="size-4 cursor-pointer p-0 hover:bg-transparent"
+                onClick={() => onSearchChange("")}
+              >
+                <X className="size-3" />
+              </Button>
+            </Badge>
+          )}
+
+          {showFavoritesOnly && (
+            <Badge variant="outline" className="bg-card/50 gap-1">
+              <Heart className="h-3 w-3 fill-current text-red-500" />
+              Favorites Only
+              <Button
+                variant="ghost"
+                size="sm"
+                className="size-4 cursor-pointer p-0 hover:bg-transparent"
+                onClick={onToggleFavoritesOnly}
+              >
+                <X className="size-3" />
+              </Button>
+            </Badge>
+          )}
+
+          {selectedTypes.map((type) => (
+            <Badge
+              key={type}
+              variant="outline"
+              className="bg-card/50 gap-1 capitalize"
+            >
+              {type}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="size-4 cursor-pointer p-0 hover:bg-transparent"
+                onClick={() => onTypeToggle(type)}
+              >
+                <X className="size-3" />
+              </Button>
+            </Badge>
+          ))}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors duration-200"
+            onClick={onClearFilters}
+          >
+            Clear all
+          </Button>
+        </div>
+      )}
+    </>
   );
 };
 
