@@ -3,11 +3,11 @@
 import { useMemo } from "react";
 import usePokemon from "@/hooks/usePokemon";
 import PokemonCard from "@/components/pokemon-card";
-import Pagination from "@/components/pagination";
 import { SortOption } from "@/types";
 import { useFavorites } from "@/providers/favorites-provider";
 import LoadingSkeleton from "./loading-skeleton";
 import NoPokemonFound from "./no-pokemon-found";
+import PaginationLinks from "@/components/pagination-links";
 
 interface Props {
   itemsPerPage: number;
@@ -31,21 +31,9 @@ const PokemonList = ({
   const { data: allPokemon = [], isLoading, isError } = usePokemon();
   const { favorites } = useFavorites();
 
-  const goToPage = (page: number) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const goToPrev = () => {
-    if (currentPage > 1) {
-      goToPage(currentPage - 1);
-    }
-  };
-
-  const goToNext = () => {
-    if (currentPage < totalPages) {
-      goToPage(currentPage + 1);
-    }
   };
 
   const sortedAndFilteredPokemon = useMemo(() => {
@@ -136,12 +124,10 @@ const PokemonList = ({
         ))}
       </div>
 
-      <Pagination
-        totalPages={totalPages}
+      <PaginationLinks
         currentPage={currentPage}
-        goToPage={goToPage}
-        goToNext={goToNext}
-        goToPrev={goToPrev}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
     </section>
   );
