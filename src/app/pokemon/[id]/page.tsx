@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
+import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import { ArrowLeft, Ruler, Weight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,10 +15,22 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const pokemon = await getPokemonDetails(id);
+
+  return {
+    title: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
+    description: `Details for the pokemon ${pokemon.name}`,
+  };
+}
+
 export default async function PokemonDetailsPage({ params }: Props) {
   const { id } = await params;
 
   const pokemon = await getPokemonDetails(id);
+  if (!pokemon) notFound();
+
   const species = await getPokemonSpecies(pokemon.species.url);
 
   const imageUrl =

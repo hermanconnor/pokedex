@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ModeToggle } from "./mode-toggle";
 
 const Header = () => {
@@ -9,12 +10,14 @@ const Header = () => {
           {/* LOGO */}
           <div className="flex min-w-fit items-center gap-3">
             <div className="size-10">
-              <Image
-                src="/pokeball.png"
-                alt="pokeball"
-                width={500}
-                height={500}
-              />
+              <Link href="/">
+                <Image
+                  src="/pokeball.png"
+                  alt="pokeball"
+                  width={500}
+                  height={500}
+                />
+              </Link>
             </div>
 
             <div className="hidden sm:block">
