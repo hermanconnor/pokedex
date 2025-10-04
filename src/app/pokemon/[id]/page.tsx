@@ -19,9 +19,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const pokemon = await getPokemonDetails(id);
 
+  if (!pokemon) {
+    return {
+      title: "Pokemon Not Found",
+      description: `No details found for the pokemon with ID: ${id}`,
+    };
+  }
+
   return {
     title: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
-    description: `Details for the pokemon ${pokemon.name}`,
+    description: `Details for the pokemon ${pokemon?.name}`,
   };
 }
 

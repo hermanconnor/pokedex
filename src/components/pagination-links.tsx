@@ -37,6 +37,7 @@ const PaginationLinks = ({ totalPages, currentPage, onPageChange }: Props) => {
           </span>
         </div>
 
+        {/* Desktop: Show full pagination */}
         <div className="hidden items-center gap-1 sm:flex">
           {currentPage > 3 && (
             <>

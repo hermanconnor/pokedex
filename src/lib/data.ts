@@ -23,9 +23,9 @@ export const getPokemonList = async (limit = 500): Promise<Pokemon[]> => {
 
 export const getPokemonDetails = async (
   nameOrId: string | number,
-): Promise<Pokemon> => {
+): Promise<Pokemon | undefined> => {
   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${nameOrId}`);
-  if (!response.ok) throw new Error("Pokemon not found");
+  if (!response.ok) return undefined;
 
   return response.json();
 };
