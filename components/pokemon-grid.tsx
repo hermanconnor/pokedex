@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { use } from "react";
 import { Pokemon } from "@/types";
 import PokemonCard from "./pokemon-card";
 
 interface Props {
-  initialPokemon: Pokemon[];
+  initialPokemon: Promise<Pokemon[]>;
 }
 
 const PokemonGrid = ({ initialPokemon }: Props) => {
-  const [pokemon, setPokemon] = useState<Pokemon[]>(initialPokemon);
+  const allPokemon = use(initialPokemon);
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      {pokemon.map((p) => (
+      {allPokemon.map((p) => (
         <PokemonCard key={p.id} pokemon={p} />
       ))}
     </div>

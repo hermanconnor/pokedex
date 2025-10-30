@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import PokemonGrid from "@/components/pokemon-grid";
 import { getPokemonDetails, getPokemonList } from "@/lib/pokeApi";
-import { Pokemon } from "@/types";
+import PokemonGridSkeleton from "@/components/pokemon-grid-skeleton";
 
 export default async function Home({
   searchParams,
@@ -18,10 +18,7 @@ export default async function Home({
   const pokemonDetailsPromises = pokemonList.results.map((pokemon) =>
     getPokemonDetails(pokemon.url),
   );
-  const pokemonDetailsResults = await Promise.all(pokemonDetailsPromises);
-  const pokemonDetails = pokemonDetailsResults.filter(
-    (p): p is Pokemon => p !== null,
-  );
+  const pokemonDetailsResults = Promise.all(pokemonDetailsPromises);
 
   const totalPages = Math.ceil(pokemonList.count / pokemonPerPage);
 
@@ -33,8 +30,8 @@ export default async function Home({
           Discover and explore the world of Pokémon
         </p>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
-        <PokemonGrid initialPokemon={pokemonDetails} />
+      <Suspense fallback={<PokemonGridSkeleton />}>
+        <PokemonGrid initialPokemon={pokemonDetailsResults} />
       </Suspense>
     </div>
   );
