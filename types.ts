@@ -137,3 +137,10 @@ export interface PokemonHeldItemVersion {
   version: NamedAPIResource;
   rarity: number;
 }
+
+export type SortOption =
+  | "id-asc"
+  | "id-desc"
+  | "name-asc"
+  | "name-desc"
+  | "type";

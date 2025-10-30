@@ -2,19 +2,18 @@
 
 import { use, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import PokemonCard from "./pokemon-card";
-import LimitSelector from "./limit-selector";
+import PokemonCard from "@/components/pokemon-card";
+import LimitSelector from "@/components/limit-selector";
+import SortSelector from "@/components/sort-selector";
 import { Pokemon } from "@/types";
 
 interface Props {
   initialPokemon: Promise<Pokemon[]>;
-  sortOption: string | string[];
+  sortOption: string;
   itemsPerPage: number;
   selectedTypes: string[];
   currentPage: number;
 }
-
-// type SortOption = "id-asc" | "id-desc" | "name-asc" | "name-desc" | "type";
 
 const PokemonGrid = ({
   initialPokemon,
@@ -79,18 +78,30 @@ const PokemonGrid = ({
 
   const paginatedPokemon = sortedAndFilteredPokemon.slice(startIndex, endIndex);
 
-  // const updateUrlParams = (updates: Record<string, string>) => {
-  //   const params = new URLSearchParams(searchParams.toString());
+  const updateUrlParams = (updates: Record<string, string>) => {
+    const params = new URLSearchParams(searchParams.toString());
 
-  //   Object.entries(updates).forEach(([key, value]) => {
-  //     params.set(key, value);
-  //   });
+    Object.entries(updates).forEach(([key, value]) => {
+      params.set(key, value);
+    });
 
-  //   router.push(`?${params.toString()}`);
-  // };
+    router.push(`?${params.toString()}`);
+  };
+
+  const handleSortChange = (value: string) => {
+    updateUrlParams({ sort: value, page: "1" });
+  };
+
+  const handleLimitChange = (value: string) => {
+    updateUrlParams({ limit: value, page: "1" });
+  };
 
   return (
-    <section>
+    <section className="space-y-6">
+      <div>
+        <SortSelector value={sortOption} onChange={handleSortChange} />
+      </div>
+
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-muted-foreground text-sm">
           Showing {startIndex + 1}-
@@ -98,8 +109,8 @@ const PokemonGrid = ({
           {sortedAndFilteredPokemon.length} Pokémon
         </p>
 
-        <div className="">
-          <LimitSelector value={itemsPerPage} />
+        <div>
+          <LimitSelector value={itemsPerPage} onChange={handleLimitChange} />
         </div>
       </div>
 

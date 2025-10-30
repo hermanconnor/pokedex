@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import PokemonGrid from "@/components/pokemon-grid";
 import { getPokemonDetails, getPokemonList } from "@/lib/pokeApi";
 import PokemonGridSkeleton from "@/components/pokemon-grid-skeleton";
-import LimitSelector from "@/components/limit-selector";
 
 export default async function Home({
   searchParams,
@@ -15,7 +14,7 @@ export default async function Home({
   const itemsPerPage = Number(params.limit) || 20;
   const offset = (currentPage - 1) * itemsPerPage;
 
-  const sortOption = params.sort || "id-asc";
+  const sortOption = (params.sort || "id-asc") as string;
   const typesParam = params.types;
   const selectedTypes =
     typeof typesParam === "string"
