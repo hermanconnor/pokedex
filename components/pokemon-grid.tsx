@@ -7,6 +7,7 @@ import LimitSelector from "@/components/limit-selector";
 import SortSelector from "@/components/sort-selector";
 import { Pokemon } from "@/types";
 import TypesSelector from "./types-selector";
+import SearchBar from "./search-bar";
 
 interface Props {
   initialPokemon: Promise<Pokemon[]>;
@@ -29,12 +30,6 @@ const PokemonGrid = ({
 
   const router = useRouter();
   const searchParams = useSearchParams();
-
-  // const currentPage = Number(searchParams.get("page")) || 1;
-  // const sortOption = (searchParams.get("sort") || "id-asc") as SortOption;
-  // const itemsPerPage = Number(searchParams.get("perPage")) || 20;
-  // const selectedTypes =
-  //   searchParams.get("types")?.split(",").filter(Boolean) || [];
 
   const sortedAndFilteredPokemon = useMemo(() => {
     let filtered = allPokemon;
@@ -89,6 +84,14 @@ const PokemonGrid = ({
     router.push(`?${params.toString()}`);
   };
 
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+
+    if (currentPage !== 1) {
+      updateUrlParams({ page: "1" });
+    }
+  };
+
   const handleSortChange = (value: string) => {
     updateUrlParams({ sort: value, page: "1" });
   };
@@ -117,13 +120,19 @@ const PokemonGrid = ({
 
   return (
     <section className="space-y-6">
-      <div className="flex gap-2">
-        <SortSelector value={sortOption} onChange={handleSortChange} />
-        <TypesSelector
-          selectedTypes={selectedTypes}
-          onClearTypes={handleClearTypes}
-          onChangeTypes={handleTypesChange}
+      <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
+        <SearchBar
+          searchQuery={searchQuery}
+          onSearchChange={handleSearchChange}
         />
+        <div className="flex items-center gap-3">
+          <SortSelector value={sortOption} onChange={handleSortChange} />
+          <TypesSelector
+            selectedTypes={selectedTypes}
+            onClearTypes={handleClearTypes}
+            onChangeTypes={handleTypesChange}
+          />
+        </div>
       </div>
 
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
