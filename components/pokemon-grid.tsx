@@ -6,6 +6,7 @@ import PokemonCard from "@/components/pokemon-card";
 import LimitSelector from "@/components/limit-selector";
 import SortSelector from "@/components/sort-selector";
 import { Pokemon } from "@/types";
+import TypesSelector from "./types-selector";
 
 interface Props {
   initialPokemon: Promise<Pokemon[]>;
@@ -96,10 +97,33 @@ const PokemonGrid = ({
     updateUrlParams({ limit: value, page: "1" });
   };
 
+  const handleTypesChange = (type: string) => {
+    const newTypes = selectedTypes.includes(type)
+      ? selectedTypes.filter((t) => t !== type)
+      : [...selectedTypes, type];
+
+    updateUrlParams({
+      types: newTypes.join(","),
+      page: "1",
+    });
+  };
+
+  const handleClearTypes = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("types");
+    params.set("page", "1");
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <section className="space-y-6">
-      <div>
+      <div className="flex gap-2">
         <SortSelector value={sortOption} onChange={handleSortChange} />
+        <TypesSelector
+          selectedTypes={selectedTypes}
+          onClearTypes={handleClearTypes}
+          onChangeTypes={handleTypesChange}
+        />
       </div>
 
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

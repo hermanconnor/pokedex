@@ -22,7 +22,7 @@ const LimitSelector = ({ value, onChange }: Props) => {
         Pokémon per page:
       </Label>
       <Select value={value.toString()} onValueChange={onChange}>
-        <SelectTrigger id="limit-select" className="w-[100px]">
+        <SelectTrigger id="limit-select" className="w-[100px] cursor-pointer">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
