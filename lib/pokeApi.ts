@@ -1,4 +1,4 @@
-import { NamedAPIResourceList, Pokemon } from "@/types";
+import { NamedAPIResourceList, Pokemon, PokemonSpecies } from "@/types";
 
 const BASE_URL = "https://pokeapi.co/api/v2";
 
@@ -20,7 +20,6 @@ export async function getPokemonList(
   return res.json();
 }
 
-// Fetch individual Pokemon details
 export async function getPokemonDetails(url: string): Promise<Pokemon> {
   const res = await fetch(url, {
     next: { revalidate: 3600 }, // Cache for 1 hour
@@ -33,7 +32,6 @@ export async function getPokemonDetails(url: string): Promise<Pokemon> {
   return res.json();
 }
 
-// Fetch detailed Pokemon data
 export async function getPokemonByNameOrId(
   nameOrId: string | number,
 ): Promise<Pokemon | undefined> {
@@ -45,3 +43,12 @@ export async function getPokemonByNameOrId(
 
   return res.json();
 }
+
+export const getPokemonSpecies = async (
+  speciesUrl: string,
+): Promise<PokemonSpecies> => {
+  const response = await fetch(speciesUrl);
+  if (!response.ok) throw new Error("Species not found");
+
+  return response.json();
+};
