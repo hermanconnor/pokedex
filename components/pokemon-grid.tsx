@@ -8,6 +8,7 @@ import SortSelector from "@/components/sort-selector";
 import { Pokemon } from "@/types";
 import TypesSelector from "./types-selector";
 import SearchBar from "./search-bar";
+import ActiveFilters from "./active-filters";
 
 interface Props {
   initialPokemon: Promise<Pokemon[]>;
@@ -118,6 +119,15 @@ const PokemonGrid = ({
     router.push(`?${params.toString()}`);
   };
 
+  const handleClearFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    setSearchQuery("");
+    // setShowFavoritesOnly(false);
+    params.delete("types");
+    params.set("page", "1");
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <section className="space-y-6">
       <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
@@ -134,6 +144,14 @@ const PokemonGrid = ({
           />
         </div>
       </div>
+
+      <ActiveFilters
+        selectedTypes={selectedTypes}
+        searchQuery={searchQuery}
+        onSearchChange={handleSortChange}
+        onToggleType={handleTypesChange}
+        onClearFilters={handleClearFilters}
+      />
 
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-muted-foreground text-sm">
