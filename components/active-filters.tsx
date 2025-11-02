@@ -8,6 +8,8 @@ interface Props {
   onSearchChange: (query: string) => void;
   onToggleType: (type: string) => void;
   onClearFilters: () => void;
+  showFavoritesOnly: boolean;
+  onToggleFavoritesOnly: () => void;
 }
 
 const ActiveFilters = ({
@@ -16,6 +18,8 @@ const ActiveFilters = ({
   onSearchChange,
   onToggleType,
   onClearFilters,
+  showFavoritesOnly,
+  onToggleFavoritesOnly,
 }: Props) => {
   const hasActiveFilters = selectedTypes.length > 0 || searchQuery.length > 0;
 
@@ -42,7 +46,7 @@ const ActiveFilters = ({
             </Badge>
           )}
 
-          {/* {showFavoritesOnly && (
+          {showFavoritesOnly && (
             <Badge variant="outline" className="bg-card/50 gap-1">
               <Heart className="size-3 fill-current text-red-500" />
               Favorites Only
@@ -55,7 +59,7 @@ const ActiveFilters = ({
                 <X className="size-3" />
               </Button>
             </Badge>
-          )} */}
+          )}
 
           {selectedTypes.map((type) => (
             <Badge

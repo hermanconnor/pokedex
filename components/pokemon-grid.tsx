@@ -10,6 +10,7 @@ import SearchBar from "@/components/search-bar";
 import ActiveFilters from "@/components/active-filters";
 import { Pokemon } from "@/types";
 import useFavorites from "@/hooks/useFavorites";
+import FavoritesSelector from "./favorites-selector";
 
 interface Props {
   initialPokemon: Promise<Pokemon[]>;
@@ -29,10 +30,12 @@ const PokemonGrid = ({
   const allPokemon = use(initialPokemon);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState<boolean>(false);
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { favorites, favoritesCount, isFavorite, toggleFavorite } =
+    useFavorites();
 
   const sortedAndFilteredPokemon = useMemo(() => {
     let filtered = allPokemon;
@@ -47,6 +50,10 @@ const PokemonGrid = ({
       filtered = filtered.filter((pokemon) =>
         pokemon.name.toLowerCase().includes(searchQuery.toLowerCase()),
       );
+    }
+
+    if (showFavoritesOnly) {
+      filtered = filtered.filter((pokemon) => favorites.has(pokemon.id));
     }
 
     const sorted = [...filtered].sort((a, b) => {
@@ -69,12 +76,18 @@ const PokemonGrid = ({
     });
 
     return sorted;
-  }, [allPokemon, searchQuery, selectedTypes, sortOption]);
+  }, [
+    allPokemon,
+    searchQuery,
+    selectedTypes,
+    sortOption,
+    favorites,
+    showFavoritesOnly,
+  ]);
 
   const totalPages = Math.ceil(sortedAndFilteredPokemon.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-
   const paginatedPokemon = sortedAndFilteredPokemon.slice(startIndex, endIndex);
 
   const updateUrlParams = (updates: Record<string, string>) => {
@@ -124,10 +137,14 @@ const PokemonGrid = ({
   const handleClearFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
     setSearchQuery("");
-    // setShowFavoritesOnly(false);
+    setShowFavoritesOnly(false);
     params.delete("types");
     params.set("page", "1");
     router.push(`?${params.toString()}`);
+  };
+
+  const handleToggleFavoritesOnly = () => {
+    setShowFavoritesOnly((prev) => !prev);
   };
 
   return (
@@ -138,6 +155,11 @@ const PokemonGrid = ({
           onSearchChange={handleSearchChange}
         />
         <div className="flex items-center gap-3">
+          <FavoritesSelector
+            favoritesCount={favoritesCount}
+            showFavoritesOnly={showFavoritesOnly}
+            onToggleFavoritesOnly={handleToggleFavoritesOnly}
+          />
           <SortSelector value={sortOption} onChange={handleSortChange} />
           <TypesSelector
             selectedTypes={selectedTypes}
@@ -153,6 +175,8 @@ const PokemonGrid = ({
         onSearchChange={handleSortChange}
         onToggleType={handleTypesChange}
         onClearFilters={handleClearFilters}
+        showFavoritesOnly={showFavoritesOnly}
+        onToggleFavoritesOnly={handleToggleFavoritesOnly}
       />
 
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
