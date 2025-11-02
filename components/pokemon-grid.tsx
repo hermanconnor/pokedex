@@ -5,10 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PokemonCard from "@/components/pokemon-card";
 import LimitSelector from "@/components/limit-selector";
 import SortSelector from "@/components/sort-selector";
+import TypesSelector from "@/components/types-selector";
+import SearchBar from "@/components/search-bar";
+import ActiveFilters from "@/components/active-filters";
 import { Pokemon } from "@/types";
-import TypesSelector from "./types-selector";
-import SearchBar from "./search-bar";
-import ActiveFilters from "./active-filters";
+import useFavorites from "@/hooks/useFavorites";
 
 interface Props {
   initialPokemon: Promise<Pokemon[]>;
@@ -31,6 +32,7 @@ const PokemonGrid = ({
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const sortedAndFilteredPokemon = useMemo(() => {
     let filtered = allPokemon;
@@ -167,7 +169,12 @@ const PokemonGrid = ({
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {paginatedPokemon.map((p) => (
-          <PokemonCard key={p.id} pokemon={p} />
+          <PokemonCard
+            key={p.id}
+            pokemon={p}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
+          />
         ))}
       </div>
     </section>

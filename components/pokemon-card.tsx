@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Info } from "lucide-react";
+import { Heart, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Pokemon } from "@/types";
@@ -9,9 +10,11 @@ import { typeColors } from "@/utils/type-colors";
 
 interface Props {
   pokemon: Pokemon;
+  isFavorite: (id: number) => boolean;
+  onToggleFavorite: (id: number) => void;
 }
 
-const PokemonCard = ({ pokemon }: Props) => {
+const PokemonCard = ({ pokemon, isFavorite, onToggleFavorite }: Props) => {
   const imageUrl =
     pokemon.sprites.other?.["official-artwork"].front_default ||
     pokemon.sprites.front_default ||
@@ -23,11 +26,11 @@ const PokemonCard = ({ pokemon }: Props) => {
         <Image src={imageUrl} alt={pokemon.name} width={500} height={500} />
 
         {/* FAVORITE BUTTON */}
-        {/* <Button
+        <Button
           variant="ghost"
           size="sm"
           className="glass-effect hover:bg-background/90 absolute top-5 right-5 cursor-pointer transition-all duration-200"
-          onClick={() => toggleFavorite(pokemon.id)}
+          onClick={() => onToggleFavorite(pokemon.id)}
         >
           <Heart
             className={cn(
@@ -37,7 +40,7 @@ const PokemonCard = ({ pokemon }: Props) => {
                 : "text-muted-foreground hover:text-red-400",
             )}
           />
-        </Button> */}
+        </Button>
 
         <div className="space-y-3">
           <div className="flex items-center justify-between">
