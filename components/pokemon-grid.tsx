@@ -11,6 +11,7 @@ import ActiveFilters from "@/components/active-filters";
 import FavoritesSelector from "@/components/favorites-selector";
 import NoPokemonFound from "@/components/no-pokemon-found";
 import PokemonGridSkeleton from "@/components/pokemon-grid-skeleton";
+import PokemonPagination from "@/components/pokemon-pagination";
 import useFavorites from "@/hooks/useFavorites";
 import usePokemon from "@/hooks/usePokemon";
 
@@ -26,8 +27,6 @@ const PokemonGrid = () => {
   const selectedTypes = useMemo(() => {
     return searchParams.get("types")?.split(",").filter(Boolean) || [];
   }, [searchParams]);
-
-  // const offset = (currentPage - 1) * itemsPerPage;
 
   const { data: allPokemon = [], isLoading, isError } = usePokemon();
   const { favorites, favoritesCount, isFavorite, toggleFavorite } =
@@ -229,6 +228,14 @@ const PokemonGrid = () => {
             />
           ))}
       </div>
+
+      {!isLoading && totalPages > 1 && (
+        <PokemonPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
+      )}
     </section>
   );
 };
