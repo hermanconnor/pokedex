@@ -5,6 +5,7 @@ import { Ruler, Weight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import PokemonDetailTabs from "@/components/pokemon-detail-tabs";
+import FavoriteButton from "./favorite-button";
 import { getPokemonByNameOrId, getPokemonSpecies } from "@/lib/pokeApi";
 import { cn } from "@/lib/utils";
 import { typeColors } from "@/utils/type-colors";
@@ -50,8 +51,7 @@ export default async function PokemonDetailsPage({ params }: Props) {
     <div className="min-h-screen">
       <div className="container mx-auto max-w-6xl px-4 py-8">
         <div className="mb-8 flex items-center justify-end gap-4">
-          {/* <FavoriteButton pokemon={pokemon} /> */}
-          favorite
+          <FavoriteButton pokemon={pokemon} />
         </div>
 
         <div className="grid gap-8 lg:grid-cols-2">
