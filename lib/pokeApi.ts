@@ -5,29 +5,26 @@ const BASE_URL = "https://pokeapi.co/api/v2";
 export async function getPokemonList(
   limit = 20,
   offset = 0,
-): Promise<NamedAPIResourceList> {
-  const res = await fetch(
+): Promise<Pokemon[]> {
+  const response = await fetch(
     `${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`,
-    {
-      next: { revalidate: 3600 }, // Cache for 1 hour
-    },
   );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch Pokemon list");
-  }
+  if (!response.ok) throw new Error("Failed to fetch Pokemon list");
 
-  return res.json();
+  const data: NamedAPIResourceList = await response.json();
+
+  const detailedPokemon = await Promise.all(
+    data.results.map((p) => getPokemonDetails(p.url)),
+  );
+
+  return detailedPokemon;
 }
 
-export async function getPokemonDetails(url: string): Promise<Pokemon> {
-  const res = await fetch(url, {
-    next: { revalidate: 3600 }, // Cache for 1 hour
-  });
+async function getPokemonDetails(url: string): Promise<Pokemon> {
+  const res = await fetch(url);
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch Pokemon details");
-  }
+  if (!res.ok) throw new Error("Failed to fetch Pokemon details");
 
   return res.json();
 }
@@ -44,11 +41,12 @@ export async function getPokemonByNameOrId(
   return res.json();
 }
 
-export const getPokemonSpecies = async (
+export async function getPokemonSpecies(
   speciesUrl: string,
-): Promise<PokemonSpecies> => {
+): Promise<PokemonSpecies> {
   const response = await fetch(speciesUrl);
+
   if (!response.ok) throw new Error("Species not found");
 
   return response.json();
-};
+}

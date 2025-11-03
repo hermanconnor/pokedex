@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import PokemonCard from "@/components/pokemon-card";
 import LimitSelector from "@/components/limit-selector";
@@ -8,32 +8,28 @@ import SortSelector from "@/components/sort-selector";
 import TypesSelector from "@/components/types-selector";
 import SearchBar from "@/components/search-bar";
 import ActiveFilters from "@/components/active-filters";
-import { Pokemon } from "@/types";
+import FavoritesSelector from "@/components/favorites-selector";
+import NoPokemonFound from "@/components/no-pokemon-found";
+import PokemonGridSkeleton from "@/components/pokemon-grid-skeleton";
 import useFavorites from "@/hooks/useFavorites";
-import FavoritesSelector from "./favorites-selector";
+import usePokemon from "@/hooks/usePokemon";
 
-interface Props {
-  initialPokemon: Promise<Pokemon[]>;
-  sortOption: string;
-  itemsPerPage: number;
-  selectedTypes: string[];
-  currentPage: number;
-}
-
-const PokemonGrid = ({
-  initialPokemon,
-  sortOption,
-  itemsPerPage,
-  selectedTypes,
-  currentPage,
-}: Props) => {
-  const allPokemon = use(initialPokemon);
-
+const PokemonGrid = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [showFavoritesOnly, setShowFavoritesOnly] = useState<boolean>(false);
-
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const itemsPerPage = Number(searchParams.get("limit")) || 20;
+  const sortOption = searchParams.get("sort") || "id-asc";
+  const selectedTypes = useMemo(() => {
+    return searchParams.get("types")?.split(",").filter(Boolean) || [];
+  }, [searchParams]);
+
+  // const offset = (currentPage - 1) * itemsPerPage;
+
+  const { data: allPokemon = [], isLoading, isError } = usePokemon();
   const { favorites, favoritesCount, isFavorite, toggleFavorite } =
     useFavorites();
 
@@ -147,6 +143,10 @@ const PokemonGrid = ({
     setShowFavoritesOnly((prev) => !prev);
   };
 
+  const handlePageChange = (page: number) => {
+    updateUrlParams({ page: page.toString() });
+  };
+
   return (
     <section className="space-y-6">
       <div className="my-6 flex flex-col flex-wrap items-center justify-between space-x-4 gap-y-6 md:flex-row">
@@ -180,26 +180,54 @@ const PokemonGrid = ({
       />
 
       <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-muted-foreground text-sm">
-          Showing {startIndex + 1}-
-          {Math.min(endIndex, sortedAndFilteredPokemon.length)} of{" "}
-          {sortedAndFilteredPokemon.length} Pokémon
-        </p>
+        {!isLoading && (
+          <>
+            <p className="text-muted-foreground text-sm">
+              Showing {startIndex + 1}-
+              {Math.min(endIndex, sortedAndFilteredPokemon.length)} of{" "}
+              {sortedAndFilteredPokemon.length} Pokémon
+            </p>
 
-        <div>
-          <LimitSelector value={itemsPerPage} onChange={handleLimitChange} />
-        </div>
+            <div>
+              <LimitSelector
+                value={itemsPerPage}
+                onChange={handleLimitChange}
+              />
+            </div>
+          </>
+        )}
       </div>
 
+      {isError && (
+        <div className="py-12 text-center">
+          <div className="text-destructive mb-4">
+            <div className="mb-4 text-6xl">⚠️</div>
+            <h3 className="mb-2 text-xl font-semibold">
+              Failed to load Pokémon
+            </h3>
+            <p>Please check your internet connection and try again.</p>
+          </div>
+        </div>
+      )}
+
+      {isLoading && <PokemonGridSkeleton />}
+
+      {!isLoading &&
+        sortedAndFilteredPokemon.length === 0 &&
+        (searchQuery || selectedTypes.length > 0 || showFavoritesOnly) && (
+          <NoPokemonFound showFavoritesOnly={showFavoritesOnly} />
+        )}
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {paginatedPokemon.map((p) => (
-          <PokemonCard
-            key={p.id}
-            pokemon={p}
-            isFavorite={isFavorite}
-            onToggleFavorite={toggleFavorite}
-          />
-        ))}
+        {!isLoading &&
+          paginatedPokemon.map((p) => (
+            <PokemonCard
+              key={p.id}
+              pokemon={p}
+              isFavorite={isFavorite}
+              onToggleFavorite={toggleFavorite}
+            />
+          ))}
       </div>
     </section>
   );
